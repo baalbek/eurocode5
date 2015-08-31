@@ -6,7 +6,7 @@ import qualified Eurocode5.Wood.WoodCommon as WC
 
 wood = WC.woodOf "gran" 48
 
-bull = BD.Bulldog BD.C2 60 20 9 48 Nothing 
+bull = BD.Bulldog BD.C2 60 20 9 
 
 bolt = B.Bolt 5 
 
