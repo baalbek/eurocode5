@@ -1,7 +1,6 @@
-{-# LANGUAGE CPP #-}
 {-# LANGUAGE NamedFieldPuns #-}
 {-# LANGUAGE RecordWildCards  #-}
-module Eurocode5.Fasteners.Bulldog where
+module Eurocode5.Fasteners.Bulldogs where
 
 import qualified Eurocode5.Wood.WoodCommon as WC
 
@@ -13,7 +12,7 @@ data BDCat = C1 | C2 | C3 | C4 | C5 | C6 | C7 | C8 | C9 | C10 | C11  deriving (E
 data Bulldog = 
     -- | Typene C1,C2,C6,C7,C10,C11
     Bulldog {
-        bt :: BDCat,       -- ^ Bulldog type 
+        bcat :: BDCat,       -- ^ Bulldog type 
         dc :: Double,      -- ^ Diameter bulldog [mm]
         d  :: Double,      -- ^ Diameter bolt [mm]
         he :: Double,      -- ^ Tennenes inntrengningsdybde [mm]
@@ -27,14 +26,14 @@ k1 Bulldog { t1,t2,he } =
                Nothing  ->  minimum [1.0, t1/(3*he)]
 
 a3t :: Bulldog -> Double
-a3t Bulldog { bt,dc,d } = maximum [80, dcf*dc, 7*d ]
-    where dcf | bt == C10 = 1.5 
-              | bt == C11 = 1.5 
+a3t Bulldog { bcat,dc,d } = maximum [80, dcf*dc, 7*d ]
+    where dcf | bcat == C10 = 1.5 
+              | bcat == C11 = 1.5 
               | otherwise = 1.1 
     
 k2 :: Bulldog -> Double
 k2 b = minimum [1.0, (a3t b)/(dcf*(dc b))]
-    where bt' = bt b
+    where bt' = bcat b
           dcf | bt' == C10 = 2.0
               | bt' == C11 = 2.0
               | otherwise = 1.5
@@ -50,7 +49,7 @@ fvrk :: Bulldog
         -> WC.Wood 
         -> Double  -- ^ Capacity bulldog [kN]
 fvrk b w = fk*(k1 b)*(k2 b)*(k3 w)*(dc'**1.5)/1000.0
-    where bt' = bt b
+    where bt' = bcat b
           dc' = dc b
           fk | bt' == C10 = 25
              | bt' == C11 = 25
